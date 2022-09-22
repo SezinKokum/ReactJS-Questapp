@@ -20,10 +20,12 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import clsx from 'clsx';
+import CommentIcon from '@mui/icons-material/Comment';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      width: 800
+      width: 800,
+      textAlign: "left"
     },
     media: {
       height: 0,
@@ -35,9 +37,6 @@ const useStyles = makeStyles((theme) => ({
       transition: theme.transitions.create('transform', {
         duration: theme.transitions.duration.shortest,
       }),
-    },
-    expandOpen: {
-        transform: 'rotate(180deg)',
     },
     avatar: {
       background: red[500],
@@ -60,13 +59,7 @@ function Post(props){
             R
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
         title={title}
-        subheader="September 14, 2016"
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary" componenet="p">
@@ -77,9 +70,6 @@ function Post(props){
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
         <IconButton
          className={clsx(classes.expand,{[classes.expandOpen]: expanded,
         })}
@@ -88,7 +78,7 @@ function Post(props){
           aria-expanded={expanded}
           aria-label="show more"
         >
-          <ExpandMoreIcon />
+          <CommentIcon />
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
