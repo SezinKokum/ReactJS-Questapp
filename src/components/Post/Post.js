@@ -21,6 +21,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import clsx from 'clsx';
 import CommentIcon from '@mui/icons-material/Comment';
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,23 +42,38 @@ const useStyles = makeStyles((theme) => ({
     avatar: {
       background: red[500],
     },
+    link:{
+      textDecoration : "none",
+      boxShadow : "none",
+      color : "white"
+  }
   }));
 
 function Post(props){
-    const{title, text} = props;
+    const{title, text, userId,userName} = props;
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
+    const[liked,setLiked] = useState(false);
+
     const handleExpandClick = () => {
       setExpanded(!expanded);
     };
+
+    const handleLike = () => {
+      setLiked(!liked);
+
+    }
+
     return(
         <div className="postContainer">
 <Card className={classes.root}>
       <CardHeader
         avatar={
+          <Link className={classes.link} to={'/users/'  + userId}> 
           <Avatar aria-label="recipe" className={classes.avatar}>
-            R
+            {userName.charAt(0).toUpperCase()}
           </Avatar>
+           </Link>
         }
         title={title}
       />
@@ -67,8 +83,10 @@ function Post(props){
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton 
+        onClick={handleLike}
+        aria-label="add to favorites">
+          <FavoriteIcon style={liked? { color: "red"} : null} />
         </IconButton>
         <IconButton
          className={clsx(classes.expand,{[classes.expandOpen]: expanded,
