@@ -19,7 +19,7 @@ function Home(){
     const[isLoaded, setIsLoaded] = useState(false);
     const[postList, setPostList] = useState([]);
     const classes = useStyles();
-    
+
     useEffect(() => {
         fetch("/posts")
         .then(res => res.json())
@@ -43,7 +43,7 @@ function Home(){
         return(
             <Container fixed className={classes.container}>
                 {postList.map(post =>  (
-                        <Post title={post.title} text={post.text} ></Post>
+                        <Post userId={post.userId} userName={post.userName} title={post.title} text={post.text} ></Post>
                 ))}
              </Container>
         );
