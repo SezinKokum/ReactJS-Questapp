@@ -25,6 +25,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { Link } from "react-router-dom";
 import { InputAdornment } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
+import { SecurityUpdate } from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,19 +55,41 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 function PostForm(props){
-    const{title, text, userId,userName} = props;
+    const{userId,userName,refreshPosts} = props;
     const classes = useStyles();
-    const [expanded, setExpanded] = useState(false);
-    const[liked,setLiked] = useState(false);
+    const[text, setText] = useState("");
+    const[title, setTitle] = useState("");
 
-    const handleExpandClick = () => {
-      setExpanded(!expanded);
+    const savePost = () => {
+        fetch("/posts",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title: title,
+                userId: userId,
+                text: text,
+            }),
+        })
+        .then((res) => res.json())
+        .catch((err) => console.log("error"))
     };
 
-    const handleLike = () => {
-      setLiked(!liked);
+    const handleSubmit = () => {
+        savePost();
+        refreshPosts();
+        //console.log(title,text);
+    };
 
-    }
+    const handleTitle = (value) => {
+        setTitle(value);
+    };
+
+    const handleText = (value) => {
+        setText(value);
+    };
 
     return(
         <div className="postContainer">
@@ -85,6 +108,7 @@ function PostForm(props){
             placeholder = "Title"
             inputProps = {{maxLength : 25}}
             fullWidth
+            onChange = {(i) => handleTitle(i.target.value)}
             >
         </OutlinedInput>}
       />
@@ -96,12 +120,14 @@ function PostForm(props){
             placeholder = "Text"
             inputProps = {{maxLength : 250}}
             fullWidth
+            onChange = {(i) => handleText(i.target.value)}
             endAdornment = {
                 <InputAdornment position = "end">
                 <Button
                 variant = "contained"
                 style = {{background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
                 color: 'white'}}
+                onClick = {handleSubmit}
                 >Post</Button>
                 </InputAdornment>
             }
