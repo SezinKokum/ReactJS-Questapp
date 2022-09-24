@@ -59,6 +59,7 @@ function PostForm(props){
     const classes = useStyles();
     const[text, setText] = useState("");
     const[title, setTitle] = useState("");
+    const [isSent, setIsSent] = useState(false);
 
     const savePost = () => {
         fetch("/posts",
@@ -79,16 +80,21 @@ function PostForm(props){
 
     const handleSubmit = () => {
         savePost();
+        setIsSent(true);
+        setTitle("");
+        setText("");
         refreshPosts();
         //console.log(title,text);
     };
 
     const handleTitle = (value) => {
         setTitle(value);
+        setIsSent(false);
     };
 
     const handleText = (value) => {
         setText(value);
+        setIsSent(false);
     };
 
     return(
@@ -108,6 +114,7 @@ function PostForm(props){
             placeholder = "Title"
             inputProps = {{maxLength : 25}}
             fullWidth
+            value = {title}
             onChange = {(i) => handleTitle(i.target.value)}
             >
         </OutlinedInput>}
@@ -120,6 +127,7 @@ function PostForm(props){
             placeholder = "Text"
             inputProps = {{maxLength : 250}}
             fullWidth
+            value = {text}
             onChange = {(i) => handleText(i.target.value)}
             endAdornment = {
                 <InputAdornment position = "end">
