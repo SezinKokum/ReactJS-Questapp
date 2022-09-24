@@ -26,7 +26,8 @@ import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
     root: {
       width: 800,
-      textAlign: "left"
+      textAlign: "left",
+      margin:20
     },
     media: {
       height: 0,
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
       }),
     },
     avatar: {
-      background: red[500],
+      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
     },
     link:{
       textDecoration : "none",
