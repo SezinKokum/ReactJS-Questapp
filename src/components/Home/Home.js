@@ -2,6 +2,7 @@ import React, {useState,useEffect} from "react";
 import Post from "../Post/Post";
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import PostForm from "../Post/PostForm";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -9,8 +10,7 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: "wrap",
         justifyContent : "center",
         alignItems : "center",
-        backgroundColor: '#cfe8fc', 
-        height: '100vh'
+        backgroundColor: '#f0f5ff'
     }
 }));
 
@@ -41,11 +41,12 @@ function Home(){
         return <div> Loading... </div>
     }else{
         return(
-            <Container fixed className={classes.container}>
+            <div fixed className={classes.container}>
+                <PostForm userId={1} userName={"ddd"} title={"title"} text={"text"} />
                 {postList.map(post =>  (
                         <Post userId={post.userId} userName={post.userName} title={post.title} text={post.text} ></Post>
                 ))}
-             </Container>
+             </div>
         );
     }
 
