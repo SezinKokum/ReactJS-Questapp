@@ -26,6 +26,12 @@ import { Link } from "react-router-dom";
 import { InputAdornment } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import { SecurityUpdate } from "@mui/icons-material";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -97,9 +103,22 @@ function PostForm(props){
         setIsSent(false);
     };
 
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setIsSent(false);
+    };
+
     return(
-        <div className="postContainer">
-<Card className={classes.root}>
+      <div>
+      <Snackbar open={isSent} autoHideDuration={1200} onClose={handleClose}>
+       <Alert onClose={handleClose} severity="success">
+         Your post is sent!
+       </Alert>
+     </Snackbar>
+    <Card className={classes.root}>
       <CardHeader
         avatar={
           <Link className={classes.link} to={'/users/'  + userId}> 
@@ -144,8 +163,7 @@ function PostForm(props){
         </Typography>
       </CardContent>
     </Card>
-
-        </div>
+        </div>     
     )
 }
 
