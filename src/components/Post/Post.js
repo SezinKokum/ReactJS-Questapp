@@ -1,6 +1,5 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 //import "./Post.scss";
-//import React, {useState,useEffect} from "react";
 //import ReactDOM from "react-dom";
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -22,6 +21,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import clsx from 'clsx';
 import CommentIcon from '@mui/icons-material/Comment';
 import { Link } from "react-router-dom";
+import Comment from "../Comment/Comment";
+import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,13 +52,19 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 function Post(props){
-    const{title, text, userId,userName} = props;
+    const{title, text, userId,userName,postId} = props;
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const[liked,setLiked] = useState(false);
+    const[error,setError] = useState(null);
+    const[isLoaded, setIsLoaded] = useState(false);
+    const[commentList,setCommentList] = useState([]);
+    const isInitialMount = useRef(true);
 
     const handleExpandClick = () => {
       setExpanded(!expanded);
+      refreshComments();
+      console.log(commentList);
     };
 
     const handleLike = () => {
@@ -65,9 +72,31 @@ function Post(props){
 
     }
 
+    const refreshComments = () => {
+      fetch("/comments?postId="+postId)
+      .then(res => res.json())
+      .then(
+         (result) => {
+              setIsLoaded(true);
+              setCommentList(result);
+         },
+         (error) => {
+              console.log(error)
+              setIsLoaded(true);//sonuçta datayı fetch ettim loaded true yapıyorum
+              setError(error);
+         }
+      )
+  }
+
+  useEffect(() => {
+    if(isInitialMount.current)
+      isInitialMount.current = false;
+    else
+      refreshComments();
+  }, [commentList])
+
     return(
-        <div className="postContainer">
-<Card className={classes.root}>
+    <Card className={classes.root}>
       <CardHeader
         avatar={
           <Link className={classes.link} to={'/users/'  + userId}> 
@@ -101,13 +130,14 @@ function Post(props){
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-       
-        </CardContent>
+      <Container fixed className = {classes.container}>
+      {error? "error" :
+                    isLoaded? commentList.map(comment => (
+                      <Comment userId = {1} userName = {"USER"} text = {comment.text}></Comment>
+                    )) : "Loading"}
+        </Container>
       </Collapse>
     </Card>
-
-        </div>
     )
 }
 
