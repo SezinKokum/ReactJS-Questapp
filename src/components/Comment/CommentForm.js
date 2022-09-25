@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { CardContent, InputAdornment, OutlinedInput, Avatar } from "@material-ui/core";
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     comment : {
@@ -22,16 +23,43 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CommentForms(props){
-    const{text, userId, userName} = props;
+    const{userId, userName, postId} = props;
     const classes = useStyles();
+    const[text, setText] = useState("");
+    const saveComment = () => {
+        fetch("/comments",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                postId: postId,
+                userId: userId,
+                text: text,
+            }),
+        })
+        .then((res) => res.json())
+        .catch((err) => console.log("error"))
+    };
+
+    const handleSubmit = () => {
+        saveComment();
+        setText("");
+    }
+
+    const handleChange = (value) => {
+        setText(value);
+    }
 
     return(
         <CardContent className = {classes.comment}>
             <OutlinedInput
             id="outlined-adornment-amount"
             multiline
-            inputProps = {{maxLength : 25}}
+            inputProps = {{maxLength : 250}}
             fullWidth
+            onChange = {(i) => handleChange(i.target.value)}
             startAdornment = {
                 <InputAdornment position = "start">
                     <Link  className={classes.link} to={'/users/'  + userId}>
@@ -41,6 +69,17 @@ function CommentForms(props){
                 </Link>
                 </InputAdornment>
             }
+            endAdornment = {
+                <InputAdornment position = "end">
+                    <Button
+                        variant = "contained"
+                        style = {{background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                        color: 'white'}}
+                        onClick = {handleSubmit}
+                >Comment</Button>
+                </InputAdornment>
+            }
+            value = {text}
             style = {{ color : "black",backgroundColor: 'white'}}
             ></OutlinedInput>
         </CardContent>
